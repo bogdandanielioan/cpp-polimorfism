@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polimorfism în C++ - Ghid Complet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #9ca3f0;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .code-block:hover {
+            border-color: #667eea;
+            transition: border-color 0.3s ease;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        pre {
+            margin: 0;
+            color: #f0f0f0;
+            white-space: pre-wrap;
+        }
+
+        .keyword {
+            color: #f92672;
+            font-weight: bold;
+        }
+
+        .type {
+            color: #66d9ef;
+        }
+
+        .string {
+            color: #a6e22e;
+        }
+
+        .comment {
+            color: #75715e;
+            font-style: italic;
+        }
+
+        .function {
+            color: #fd971f;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .important {
+            background: rgba(249, 38, 114, 0.1);
+            border-left: 4px solid #f92672;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .exercise {
+            background: rgba(166, 226, 46, 0.1);
+            border: 2px dashed #a6e22e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .exercise:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(166, 226, 46, 0.2);
+        }
+
+        .exercise h4 {
+            color: #a6e22e;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .output {
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: monospace;
+            color: #a6e22e;
+            min-height: 50px;
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #9ca3f0;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .tab.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .diagram {
+            background: #2a2a3e;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diagram::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .class-box {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 150px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .class-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .arrow {
+            color: #667eea;
+            font-size: 24px;
+            margin: 0 10px;
+        }
+
+        ul {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 10px 0;
+            color: #d0d0d0;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Polimorfism în C++</h1>
+            <p class="subtitle">Ghid complet cu teorie, exemple practice și exerciții interactive</p>
+        </header>
+
+        <section class="section">
+            <h2>📚 Ce este Polimorfismul?</h2>
+            
+            <div class="concept-box">
+                <p><strong>Polimorfismul</strong> este unul dintre cei patru piloni ai programării orientate pe obiecte (OOP), alături de încapsulare, moștenire și abstractizare.</p>
+                <p style="margin-top: 10px;">Termenul provine din greacă: <span class="highlight">poly</span> (multe) + <span class="highlight">morphe</span> (forme), însemnând capacitatea de a avea multiple forme.</p>
+            </div>
+
+            <p>În C++, polimorfismul permite obiectelor de tipuri diferite să fie tratate prin aceeași interfață, permițând cod mai flexibil și mai ușor de întreținut.</p>
+
+            <div class="diagram">
+                <div class="class-box">Clasă de Bază</div>
+                <span class="arrow">↓</span>
+                <div style="display: flex; justify-content: center; gap: 20px;">
+                    <div class="class-box">Clasă Derivată 1</div>
+                    <div class="class-box">Clasă Derivată 2</div>
+                    <div class="class-box">Clasă Derivată 3</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Tipuri de Polimorfism</h2>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('compile-time')">Compile-Time</div>
+                <div class="tab" onclick="showTab('runtime')">Runtime</div>
+            </div>
+
+            <div id="compile-time" class="tab-content active">
+                <h3>Polimorfism la Compile-Time (Static)</h3>
+                
+                <div class="concept-box">
+                    <p>Rezolvat în timpul compilării. Include:</p>
+                    <ul>
+                        <li><strong>Supraîncărcarea funcțiilor</strong> (Function Overloading)</li>
+                        <li><strong>Supraîncărcarea operatorilor</strong> (Operator Overloading)</li>
+                        <li><strong>Template-uri</strong></li>
+                    </ul>
+                </div>
+
+                <h4>1. Supraîncărcarea Funcțiilor</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="keyword">using namespace</span> std;
+
+<span class="keyword">class</span> <span class="type">Calculator</span> {
+<span class="keyword">public:</span>
+    <span class="comment">// Funcții cu același nume dar parametri diferiți</span>
+    <span class="type">int</span> <span class="function">add</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+        <span class="keyword">return</span> a + b;
+    }
+    
+    <span class="type">double</span> <span class="function">add</span>(<span class="type">double</span> a, <span class="type">double</span> b) {
+        <span class="keyword">return</span> a + b;
+    }
+    
+    <span class="type">int</span> <span class="function">add</span>(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c) {
+        <span class="keyword">return</span> a + b + c;
+    }
+};</pre>
+                </div>
+
+                <h4>2. Supraîncărcarea Operatorilor</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">Complex</span> {
+<span class="keyword">private:</span>
+    <span class="type">double</span> real, imag;
+    
+<span class="keyword">public:</span>
+    <span class="function">Complex</span>(<span class="type">double</span> r = <span class="string">0</span>, <span class="type">double</span> i = <span class="string">0</span>) : real(r), imag(i) {}
+    
+    <span class="comment">// Supraîncărcarea operatorului +</span>
+    <span class="type">Complex</span> <span class="keyword">operator+</span>(<span class="keyword">const</span> <span class="type">Complex</span>& c) {
+        <span class="keyword">return</span> <span class="type">Complex</span>(real + c.real, imag + c.imag);
+    }
+    
+    <span class="comment">// Supraîncărcarea operatorului &lt;&lt;</span>
+    <span class="keyword">friend</span> ostream& <span class="keyword">operator&lt;&lt;</span>(ostream& out, <span class="keyword">const</span> <span class="type">Complex</span>& c) {
+        out &lt;&lt; c.real &lt;&lt; <span class="string">" + "</span> &lt;&lt; c.imag &lt;&lt; <span class="string">"i"</span>;
+        <span class="keyword">return</span> out;
+    }
+};</pre>
+                </div>
+            </div>
+
+            <div id="runtime" class="tab-content">
+                <h3>Polimorfism la Runtime (Dinamic)</h3>
+                
+                <div class="concept-box">
+                    <p>Rezolvat în timpul execuției. Se realizează prin:</p>
+                    <ul>
+                        <li><strong>Funcții virtuale</strong></li>
+                        <li><strong>Pointeri și referințe la clasa de bază</strong></li>
+                        <li><strong>Tabele de funcții virtuale (vtable)</strong></li>
+                    </ul>
+                </div>
+
+                <h4>Exemplu Complet - Sistem de Forme Geometrice</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="keyword">#include</span> <span class="string">&lt;vector&gt;</span>
+<span class="keyword">#include</span> <span class="string">&lt;cmath&gt;</span>
+<span class="keyword">using namespace</span> std;
+
+<span class="comment">// Clasă de bază abstractă</span>
+<span class="keyword">class</span> <span class="type">Shape</span> {
+<span class="keyword">protected:</span>
+    <span class="type">string</span> name;
+    
+<span class="keyword">public:</span>
+    <span class="function">Shape</span>(<span class="keyword">const</span> <span class="type">string</span>& n) : name(n) {}
+    
+    <span class="comment">// Funcții virtuale pure - face clasa abstractă</span>
+    <span class="keyword">virtual</span> <span class="type">double</span> <span class="function">area</span>() <span class="keyword">const</span> = <span class="string">0</span>;
+    <span class="keyword">virtual</span> <span class="type">double</span> <span class="function">perimeter</span>() <span class="keyword">const</span> = <span class="string">0</span>;
+    
+    <span class="comment">// Funcție virtuală normală</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">display</span>() <span class="keyword">const</span> {
+        cout &lt;&lt; <span class="string">"Shape: "</span> &lt;&lt; name &lt;&lt; endl;
+        cout &lt;&lt; <span class="string">"Area: "</span> &lt;&lt; area() &lt;&lt; endl;
+        cout &lt;&lt; <span class="string">"Perimeter: "</span> &lt;&lt; perimeter() &lt;&lt; endl;
+    }
+    
+    <span class="comment">// Destructor virtual - important pentru polimorfism!</span>
+    <span class="keyword">virtual</span> ~<span class="function">Shape</span>() {}
+};
+
+<span class="comment">// Clasă derivată - Cerc</span>
+<span class="keyword">class</span> <span class="type">Circle</span> : <span class="keyword">public</span> <span class="type">Shape</span> {
+<span class="keyword">private:</span>
+    <span class="type">double</span> radius;
+    
+<span class="keyword">public:</span>
+    <span class="function">Circle</span>(<span class="type">double</span> r) : <span class="type">Shape</span>(<span class="string">"Circle"</span>), radius(r) {}
+    
+    <span class="keyword">double</span> <span class="function">area</span>() <span class="keyword">const override</span> {
+        <span class="keyword">return</span> M_PI * radius * radius;
+    }
+    
+    <span class="keyword">double</span> <span class="function">perimeter</span>() <span class="keyword">const override</span> {
+        <span class="keyword">return</span> <span class="string">2</span> * M_PI * radius;
+    }
+};
+
+<span class="comment">// Clasă derivată - Dreptunghi</span>
+<span class="keyword">class</span> <span class="type">Rectangle</span> : <span class="keyword">public</span> <span class="type">Shape</span> {
+<span class="keyword">private:</span>
+    <span class="type">double</span> width, height;
+    
+<span class="keyword">public:</span>
+    <span class="function">Rectangle</span>(<span class="type">double</span> w, <span class="type">double</span> h) 
+        : <span class="type">Shape</span>(<span class="string">"Rectangle"</span>), width(w), height(h) {}
+    
+    <span class="keyword">double</span> <span class="function">area</span>() <span class="keyword">const override</span> {
+        <span class="keyword">return</span> width * height;
+    }
+    
+    <span class="keyword">double</span> <span class="function">perimeter</span>() <span class="keyword">const override</span> {
+        <span class="keyword">return</span> <span class="string">2</span> * (width + height);
+    }
+};
+
+<span class="comment">// Clasă derivată - Triunghi</span>
+<span class="keyword">class</span> <span class="type">Triangle</span> : <span class="keyword">public</span> <span class="type">Shape</span> {
+<span class="keyword">private:</span>
+    <span class="type">double</span> a, b, c; <span class="comment">// laturile</span>
+    
+<span class="keyword">public:</span>
+    <span class="function">Triangle</span>(<span class="type">double</span> side1, <span class="type">double</span> side2, <span class="type">double</span> side3) 
+        : <span class="type">Shape</span>(<span class="string">"Triangle"</span>), a(side1), b(side2), c(side3) {}
+    
+    <span class="keyword">double</span> <span class="function">area</span>() <span class="keyword">const override</span> {
+        <span class="comment">// Formula lui Heron</span>
+        <span class="type">double</span> s = (a + b + c) / <span class="string">2</span>;
+        <span class="keyword">return</span> sqrt(s * (s - a) * (s - b) * (s - c));
+    }
+    
+    <span class="keyword">double</span> <span class="function">perimeter</span>() <span class="keyword">const override</span> {
+        <span class="keyword">return</span> a + b + c;
+    }
+};
+
+<span class="keyword">int</span> <span class="function">main</span>() {
+    <span class="comment">// Vector de pointeri la clasa de bază</span>
+    vector&lt;<span class="type">Shape</span>*&gt; shapes;
+    
+    <span class="comment">// Adăugăm diferite forme</span>
+    shapes.push_back(<span class="keyword">new</span> <span class="type">Circle</span>(<span class="string">5</span>));
+    shapes.push_back(<span class="keyword">new</span> <span class="type">Rectangle</span>(<span class="string">4</span>, <span class="string">6</span>));
+    shapes.push_back(<span class="keyword">new</span> <span class="type">Triangle</span>(<span class="string">3</span>, <span class="string">4</span>, <span class="string">5</span>));
+    
+    <span class="comment">// Polimorfism în acțiune!</span>
+    cout &lt;&lt; <span class="string">"=== Demonstrație Polimorfism ===\n\n"</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>& shape : shapes) {
+        shape-&gt;display();  <span class="comment">// Apelează metoda corectă pentru fiecare tip</span>
+        cout &lt;&lt; <span class="string">"-----------------\n"</span>;
+    }
+    
+    <span class="comment">// Calculăm aria totală</span>
+    <span class="type">double</span> totalArea = <span class="string">0</span>;
+    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>& shape : shapes) {
+        totalArea += shape-&gt;area();
+    }
+    cout &lt;&lt; <span class="string">"\nAria totală: "</span> &lt;&lt; totalArea &lt;&lt; endl;
+    
+    <span class="comment">// Eliberăm memoria</span>
+    <span class="keyword">for</span> (<span class="keyword">auto</span>& shape : shapes) {
+        <span class="keyword">delete</span> shape;
+    }
+    
+    <span class="keyword">return</span> <span class="string">0</span>;
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ Concepte Avansate</h2>
+
+            <h3>1. Funcții Virtuale Pure și Clase Abstracte</h3>
+            <div class="important">
+                <p><strong>Clasă abstractă:</strong> O clasă care conține cel puțin o funcție virtuală pură.</p>
+                <p><strong>Funcție virtuală pură:</strong> Declarată cu <code>= 0</code> și TREBUIE implementată în clasele derivate.</p>
+            </div>
+
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                <pre><span class="keyword">class</span> <span class="type">Animal</span> {  <span class="comment">// Clasă abstractă</span>
+<span class="keyword">public:</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">makeSound</span>() = <span class="string">0</span>;  <span class="comment">// Funcție virtuală pură</span>
+    
+    <span class="comment">// Poate avea și funcții normale</span>
+    <span class="type">void</span> <span class="function">sleep</span>() {
+        cout &lt;&lt; <span class="string">"Zzz..."</span> &lt;&lt; endl;
+    }
+};</pre>
+            </div>
+
+            <h3>2. Tabela de Funcții Virtuale (vtable)</h3>
+            <div class="concept-box">
+                <p>Când o clasă conține funcții virtuale, compilatorul creează o <strong>vtable</strong> (virtual table) pentru acea clasă.</p>
+                <ul>
+                    <li>Fiecare obiect conține un pointer ascuns către vtable-ul clasei sale</li>
+                    <li>vtable conține pointeri către implementările funcțiilor virtuale</li>
+                    <li>Permite legarea dinamică (dynamic binding) la runtime</li>
+                </ul>
+            </div>
+
+            <h3>3. Cuvântul cheie 'override' (C++11)</h3>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                <pre><span class="keyword">class</span> <span class="type">Base</span> {
+<span class="keyword">public:</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">func</span>(<span class="type">int</span> x);
+};
+
+<span class="keyword">class</span> <span class="type">Derived</span> : <span class="keyword">public</span> <span class="type">Base</span> {
+<span class="keyword">public:</span>
+    <span class="comment">// 'override' garantează că suprascrii o funcție virtuală existentă</span>
+    <span class="type">void</span> <span class="function">func</span>(<span class="type">int</span> x) <span class="keyword">override</span>;
+    
+    <span class="comment">// Eroare de compilare dacă funcția nu există în bază!</span>
+    <span class="comment">// void funk(int x) override;  // Typo detectat!</span>
+};</pre>
+            </div>
+
+            <h3>4. Cuvântul cheie 'final'</h3>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                <pre><span class="keyword">class</span> <span class="type">Base</span> {
+<span class="keyword">public:</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">func</span>();
+};
+
+<span class="keyword">class</span> <span class="type">Derived</span> <span class="keyword">final</span> : <span class="keyword">public</span> <span class="type">Base</span> {  <span class="comment">// Nu poate fi moștenită</span>
+<span class="keyword">public:</span>
+    <span class="type">void</span> <span class="function">func</span>() <span class="keyword">final</span>;  <span class="comment">// Nu poate fi suprascrisă</span>
+};</pre>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎮 Exemplu Practic: Sistem de Joc RPG</h2>
+            
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                <pre><span class="keyword">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="keyword">#include</span> <span class="string">&lt;vector&gt;</span>
+<span class="keyword">#include</span> <span class="string">&lt;memory&gt;</span>
+<span class="keyword">using namespace</span> std;
+
+<span class="comment">// Clasă de bază pentru personaje</span>
+<span class="keyword">class</span> <span class="type">Character</span> {
+<span class="keyword">protected:</span>
+    <span class="type">string</span> name;
+    <span class="type">int</span> health;
+    <span class="type">int</span> damage;
+    
+<span class="keyword">public:</span>
+    <span class="function">Character</span>(<span class="keyword">const</span> <span class="type">string</span>& n, <span class="type">int</span> h, <span class="type">int</span> d) 
+        : name(n), health(h), damage(d) {}
+    
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">attack</span>() <span class="keyword">const</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="string">" attacks for "</span> &lt;&lt; damage &lt;&lt; <span class="string">" damage!"</span> &lt;&lt; endl;
+    }
+    
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">specialAbility</span>() <span class="keyword">const</span> = <span class="string">0</span>;
+    
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">displayInfo</span>() <span class="keyword">const</span> {
+        cout &lt;&lt; <span class="string">"[" </span>&lt;&lt; getClass() &lt;&lt; <span class="string">"] "</span> &lt;&lt; name 
+             &lt;&lt; <span class="string">" - HP: "</span> &lt;&lt; health &lt;&lt; <span class="string">", DMG: "</span> &lt;&lt; damage &lt;&lt; endl;
+    }
+    
+    <span class="keyword">virtual</span> <span class="type">string</span> <span class="function">getClass</span>() <span class="keyword">const</span> = <span class="string">0</span>;
+    
+    <span class="keyword">virtual</span> ~<span class="function">Character</span>() = <span class="keyword">default</span>;
+};
+
+<span class="comment">// Clasă Warrior</span>
+<span class="keyword">class</span> <span class="type">Warrior</span> : <span class="keyword">public</span> <span class="type">Character</span> {
+<span class="keyword">private:</span>
+    <span class="type">int</span> armor;
+    
+<span class="keyword">public:</span>
+    <span class="function">Warrior</span>(<span class="keyword">const</span> <span class="type">string</span>& n) 
+        : <span class="type">Character</span>(n, <span class="string">150</span>, <span class="string">25</span>), armor(<span class="string">50</span>) {}
+    
+    <span class="type">void</span> <span class="function">attack</span>() <span class="keyword">const override</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="string">" swings his mighty sword for "</span> 
+             &lt;&lt; damage &lt;&lt; <span class="string">" damage!"</span> &lt;&lt; endl;
+    }
+    
+    <span class="type">void</span> <span class="function">specialAbility</span>() <span class="keyword">const override</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="string">" uses Shield Bash! Stuns the enemy!"</span> &lt;&lt; endl;
+    }
+    
+    <span class="type">string</span> <span class="function">getClass</span>() <span class="keyword">const override</span> {
+        <span class="keyword">return</span> <span class="string">"Warrior"</span>;
+    }
+};
+
+<span class="comment">// Clasă Mage</span>
+<span class="keyword">class</span> <span class="type">Mage</span> : <span class="keyword">public</span> <span class="type">Character</span> {
+<span class="keyword">private:</span>
+    <span class="type">int</span> mana;
+    
+<span class="keyword">public:</span>
+    <span class="function">Mage</span>(<span class="keyword">const</span> <span class="type">string</span>& n) 
+        : <span class="type">Character</span>(n, <span class="string">80</span>, <span class="string">40</span>), mana(<span class="string">200</span>) {}
+    
+    <span class="type">void</span> <span class="function">attack</span>() <span class="keyword">const override</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="string">" casts Fireball for "</span> 
+             &lt;&lt; damage &lt;&lt; <span class="string">" damage!"</span> &lt;&lt; endl;
+    }
+    
+    <span class="type">void</span> <span class="function">specialAbility</span>() <span class="keyword">const override</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="string">" casts Meteor Storm! Massive area damage!"</span> &lt;&lt; endl;
+    }
+    
+    <span class="type">string</span> <span class="function">getClass</span>() <span class="keyword">const override</span> {
+        <span class="keyword">return</span> <span class="string">"Mage"</span>;
+    }
+};
+
+<span class="comment">// Clasă Rogue</span>
+<span class="keyword">class</span> <span class="type">Rogue</span> : <span class="keyword">public</span> <span class="type">Character</span> {
+<span class="keyword">private:</span>
+    <span class="type">int</span> critChance;
+    
+<span class="keyword">public:</span>
+    <span class="function">Rogue</span>(<span class="keyword">const</span> <span class="type">string</span>& n) 
+        : <span class="type">Character</span>(n, <span class="string">100</span>, <span class="string">35</span>), critChance(<span class="string">30</span>) {}
+    
+    <span class="type">void</span> <span class="function">attack</span>() <span class="keyword">const override</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="string">" strikes from the shadows for "</span> 
+             &lt;&lt; damage &lt;&lt; <span class="string">" damage!"</span> &lt;&lt; endl;
+    }
+    
+    <span class="type">void</span> <span class="function">specialAbility</span>() <span class="keyword">const override</span> {
+        cout &lt;&lt; name &lt;&lt; <span class="string">" vanishes! Becomes invisible!"</span> &lt;&lt; endl;
+    }
+    
+    <span class="type">string</span> <span class="function">getClass</span>() <span class="keyword">const override</span> {
+        <span class="keyword">return</span> <span class="string">"Rogue"</span>;
+    }
+};
+
+<span class="keyword">int</span> <span class="function">main</span>() {
+    <span class="comment">// Folosim smart pointers pentru management automat al memoriei</span>
+    vector&lt;unique_ptr&lt;<span class="type">Character</span>&gt;&gt; party;
+    
+    party.push_back(make_unique&lt;<span class="type">Warrior</span>&gt;(<span class="string">"Thorin"</span>));
+    party.push_back(make_unique&lt;<span class="type">Mage</span>&gt;(<span class="string">"Gandalf"</span>));
+    party.push_back(make_unique&lt;<span class="type">Rogue</span>&gt;(<span class="string">"Bilbo"</span>));
+    
+    cout &lt;&lt; <span class="string">"=== Party Members ===\n"</span>;
+    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>& member : party) {
+        member-&gt;displayInfo();
+    }
+    
+    cout &lt;&lt; <span class="string">"\n=== Battle Begins! ===\n"</span>;
+    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>& member : party) {
+        member-&gt;attack();
+        member-&gt;specialAbility();
+        cout &lt;&lt; endl;
+    }
+    
+    <span class="keyword">return</span> <span class="string">0</span>;
+}</pre>
+            </div>
+
+            <button onclick="runRPGExample()">▶ Rulează Exemplul</button>
+            <div id="rpg-output" class="output"></div>
+        </section>
+
+        <section class="section">
+            <h2>✏️ Exerciții Practice</h2>
+
+            <div class="exercise">
+                <h4>Exercițiul 1: Sistem Bancar</h4>
+                <p>Creați o ierarhie de clase pentru un sistem bancar:</p>
+                <ul>
+                    <li>Clasă de bază <code>Account</code> cu metode virtuale pentru <code>deposit()</code>, <code>withdraw()</code>, și <code>calculateInterest()</code></li>
+                    <li>Clase derivate: <code>SavingsAccount</code>, <code>CurrentAccount</code>, <code>FixedDeposit</code></li>
+                    <li>Implementați rate diferite de dobândă și reguli de retragere</li>
+                </ul>
+                <button onclick="toggleSolution('sol1')">Vezi Soluția</button>
+                <div id="sol1" class="output" style="display: none;">
+                    <pre>class Account {
+protected:
+    double balance;
+    string accountNumber;
+    
+public:
+    Account(string accNum, double initialBalance) 
+        : accountNumber(accNum), balance(initialBalance) {}
+    
+    virtual void deposit(double amount) {
+        balance += amount;
+    }
+    
+    virtual bool withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+    
+    virtual double calculateInterest() = 0;
+    virtual void display() {
+        cout << "Account: " << accountNumber 
+             << ", Balance: $" << balance << endl;
+    }
+};
+
+class SavingsAccount : public Account {
+private:
+    double interestRate = 0.04; // 4% annually
+    
+public:
+    SavingsAccount(string accNum, double balance) 
+        : Account(accNum, balance) {}
+    
+    double calculateInterest() override {
+        return balance * interestRate;
+    }
+    
+    bool withdraw(double amount) override {
+        // Minimum balance requirement
+        if (balance - amount >= 500) {
+            return Account::withdraw(amount);
+        }
+        cout << "Insufficient balance (min $500 required)\n";
+        return false;
+    }
+};</pre>
+                </div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 2: Sistem de Transport</h4>
+                <p>Implementați o ierarhie pentru vehicule:</p>
+                <ul>
+                    <li>Clasă abstractă <code>Vehicle</code> cu metode pentru <code>move()</code>, <code>refuel()</code></li>
+                    <li>Clase derivate: <code>Car</code>, <code>Bicycle</code>, <code>Airplane</code></li>
+                    <li>Adăugați o funcție care primește un vector de vehicule și le face să se miște</li>
+                </ul>
+                <button onclick="toggleSolution('sol2')">Vezi Soluția</button>
+                <div id="sol2" class="output" style="display: none;">
+                    <pre>class Vehicle {
+protected:
+    string name;
+    double speed;
+    
+public:
+    Vehicle(string n, double s) : name(n), speed(s) {}
+    
+    virtual void move() = 0;
+    virtual void refuel() = 0;
+    virtual ~Vehicle() = default;
+};
+
+class Car : public Vehicle {
+private:
+    double fuelLevel;
+    
+public:
+    Car(string n) : Vehicle(n, 120), fuelLevel(50) {}
+    
+    void move() override {
+        cout << name << " drives on the road at " 
+             << speed << " km/h" << endl;
+        fuelLevel -= 5;
+    }
+    
+    void refuel() override {
+        cout << "Filling up gas tank..." << endl;
+        fuelLevel = 100;
+    }
+};
+
+class Bicycle : public Vehicle {
+public:
+    Bicycle(string n) : Vehicle(n, 25) {}
+    
+    void move() override {
+        cout << name << " pedals on the bike path at " 
+             << speed << " km/h" << endl;
+    }
+    
+    void refuel() override {
+        cout << "Having a energy bar..." << endl;
+    }
+};
+
+void moveAllVehicles(vector<Vehicle*>& vehicles) {
+    for (auto& v : vehicles) {
+        v->move();
+    }
+}</pre>
+                </div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 3: Calculator cu Operații</h4>
+                <p>Creați un sistem de operații matematice folosind polimorfism:</p>
+                <ul>
+                    <li>Clasă de bază <code>Operation</code> cu metodă virtuală <code>calculate()</code></li>
+                    <li>Clase derivate pentru: <code>Addition</code>, <code>Subtraction</code>, <code>Multiplication</code>, <code>Division</code></li>
+                    <li>Implementați un calculator care procesează o listă de operații</li>
+                </ul>
+                <button onclick="checkExercise3()">Verifică Răspunsul</button>
+                <div id="ex3-output" class="output"></div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Avantaje și Dezavantaje</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="concept-box" style="background: rgba(46, 204, 113, 0.1); border-left-color: #2ecc71;">
+                    <h3 style="color: #2ecc71;">✅ Avantaje</h3>
+                    <ul>
+                        <li>Cod mai flexibil și extensibil</li>
+                        <li>Reutilizare eficientă a codului</li>
+                        <li>Întreținere mai ușoară</li>
+                        <li>Abstractizare puternică</li>
+                        <li>Respectă principiul Open/Closed</li>
+                    </ul>
+                </div>
+                
+                <div class="important">
+                    <h3 style="color: #f92672;">⚠️ Dezavantaje</h3>
+                    <ul>
+                        <li>Overhead de performanță (vtable lookup)</li>
+                        <li>Complexitate crescută pentru începători</li>
+                        <li>Debugging mai dificil</li>
+                        <li>Utilizare suplimentară de memorie</li>
+                        <li>Nu poate fi folosit cu funcții inline</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📝 Rezumat și Best Practices</h2>
+            
+            <div class="concept-box">
+                <h3>Reguli de Aur:</h3>
+                <ul>
+                    <li>✨ Folosiți <code>virtual</code> pentru funcții care vor fi suprascrise</li>
+                    <li>✨ Întotdeauna declarați destructorul virtual în clasele de bază</li>
+                    <li>✨ Folosiți <code>override</code> în clasele derivate (C++11)</li>
+                    <li>✨ Preferați composition over inheritance când e posibil</li>
+                    <li>✨ Nu faceți toate funcțiile virtuale - doar cele necesare</li>
+                    <li>✨ Folosiți smart pointers pentru management automat al memoriei</li>
+                    <li>✨ Testați polimorfismul cu diferite tipuri de obiecte</li>
+                </ul>
+            </div>
+
+            <div class="important">
+                <h3>Erori Comune de Evitat:</h3>
+                <ul>
+                    <li>❌ Uitarea destructorului virtual → memory leaks</li>
+                    <li>❌ Object slicing când copiați obiecte derivate în bază</li>
+                    <li>❌ Confuzia între overloading și overriding</li>
+                    <li>❌ Apelarea funcțiilor virtuale în constructor/destructor</li>
+                    <li>❌ Uitarea să implementezi funcțiile virtuale pure</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section" style="text-align: center; background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));">
+            <h2>🚀 Concluzie</h2>
+            <p style="font-size: 1.2em; margin: 20px 0;">
+                Polimorfismul este unul dintre cele mai puternice concepte în C++, 
+                permițând cod elegant, flexibil și ușor de întreținut.
+            </p>
+            <p style="font-size: 1.1em; opacity: 0.9;">
+                Stăpânirea polimorfismului vă va transforma dintr-un programator C++ începător 
+                într-unul avansat! 💪
+            </p>
+            <button onclick="alert('Felicitări pentru parcurgerea tutorialului! 🎉\nAcum practică cu exercițiile de mai sus!')">
+                🎓 Am Terminat Tutorialul!
+            </button>
+        </section>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.textContent.toLowerCase().includes(tabName.toLowerCase().split('-')[0])) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function copyCode(btn) {
+            const codeBlock = btn.parentElement.querySelector('pre');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeBlock.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            const originalText = btn.textContent;
+            btn.textContent = 'Copiat! ✓';
+            btn.style.background = '#2ecc71';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        function runRPGExample() {
+            const output = document.getElementById('rpg-output');
+            output.style.display = 'block';
+            output.innerHTML = `=== Party Members ===
+[Warrior] Thorin - HP: 150, DMG: 25
+[Mage] Gandalf - HP: 80, DMG: 40
+[Rogue] Bilbo - HP: 100, DMG: 35
+
+=== Battle Begins! ===
+Thorin swings his mighty sword for 25 damage!
+Thorin uses Shield Bash! Stuns the enemy!
+
+Gandalf casts Fireball for 40 damage!
+Gandalf casts Meteor Storm! Massive area damage!
+
+Bilbo strikes from the shadows for 35 damage!
+Bilbo vanishes! Becomes invisible!
+
+<span style="color: #2ecc71;">✓ Exemplu executat cu succes!</span>`;
+        }
+
+        function toggleSolution(id) {
+            const sol = document.getElementById(id);
+            sol.style.display = sol.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function checkExercise3() {
+            const output = document.getElementById('ex3-output');
+            output.style.display = 'block';
+            output.innerHTML = `<span style="color: #f92672;">Indicații pentru rezolvare:</span>
+
+1. Creați clasa de bază Operation cu doi operanzi:
+   - double a, b;
+   - virtual double calculate() = 0;
+
+2. Implementați clasele derivate:
+   - Addition: return a + b;
+   - Subtraction: return a - b;
+   - Multiplication: return a * b;
+   - Division: return b != 0 ? a/b : throw exception;
+
+3. În main(), creați un vector<Operation*> și procesați-l
+
+<span style="color: #2ecc71;">Hint: Folosiți polimorfism pentru a procesa toate operațiile uniform!</span>`;
+        }
+
+        // Animație pentru diagrame
+        document.querySelectorAll('.class-box').forEach((box, index) => {
+            box.style.animationDelay = `${index * 0.1}s`;
+            box.style.animation = 'fadeIn 0.8s ease forwards';
+        });
+    </script>
+</body>
+</html>
