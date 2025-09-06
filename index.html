@@ -802,7 +802,444 @@
         </section>
 
         <section class="section">
-            <h2>✏️ Exerciții Practice</h2>
+            <h2>🧩 Exerciții de Înțelegere a Polimorfismului</h2>
+            
+            <div class="important">
+                <p><strong>Important:</strong> Aceste exerciții demonstrează comportamentul subtil al funcțiilor virtuale vs non-virtuale.</p>
+                <p>Analizați cu atenție ce funcții sunt virtuale și predicționați output-ul ÎNAINTE de a rula codul!</p>
+            </div>
+
+            <div class="exercise">
+                <h4>🐸 Exemplu Original: Poveste cu Broască</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">#include</span> <span class="string">&lt;iostream&gt;</span>
+<span class="keyword">using namespace</span> std;
+
+<span class="keyword">class</span> <span class="type">fairy_tale</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">act0</span>(){ cout &lt;&lt; <span class="string">"0 Început poveste originală\n"</span>; }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">act1</span>(){ cout &lt;&lt; <span class="string">"1 Prințesa întâlnește broscoiul\n"</span>; }
+    <span class="type">void</span>        <span class="function">act2</span>(){ cout &lt;&lt; <span class="string">"2 Prințesa sărută broscoiul\n"</span>; }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">act3</span>(){ cout &lt;&lt; <span class="string">"3 Broscoiul se transformă în Prinț\n"</span>; act4(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">act4</span>(){ cout &lt;&lt; <span class="string">"4 Și au trăit mulți ani fericiți\n"</span>; act5(); }
+    <span class="type">void</span>        <span class="function">act5</span>(){ cout &lt;&lt; <span class="string">"5 Sfârșit fericit\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">unhappy_tale</span> : <span class="keyword">public</span> <span class="type">fairy_tale</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">act0</span>(){ cout &lt;&lt; <span class="string">"0 Început poveste modificată\n"</span>; act1(); }
+    <span class="type">void</span>        <span class="function">act2</span>(){ cout &lt;&lt; <span class="string">"2 Prințesa atinge broscoiul\n"</span>; act3(); }
+    <span class="type">void</span>        <span class="function">act3</span>(){ cout &lt;&lt; <span class="string">"3 Broscoiul rămâne broscoi\n"</span>; act4(); }
+    <span class="type">void</span>        <span class="function">act4</span>(){ cout &lt;&lt; <span class="string">"4 Prințesa fuge îngrozită\n"</span>; act5(); }
+    <span class="type">void</span>        <span class="function">act5</span>(){ cout &lt;&lt; <span class="string">"5 Sfârșit nu prea fericit\n"</span>; }
+};</pre>
+                </div>
+                <button onclick="runFairyTale()">▶ Rulează și Vezi Output</button>
+                <div id="fairy-output" class="output"></div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 1: 🍕 Restaurant Chain</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">Restaurant</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">openDoors</span>()  { cout &lt;&lt; <span class="string">"Opening at 10 AM\n"</span>; serve(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">serve</span>()     { cout &lt;&lt; <span class="string">"Serving regular menu\n"</span>; }
+    <span class="type">void</span>        <span class="function">takeOrder</span>() { cout &lt;&lt; <span class="string">"Taking order\n"</span>; cook(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">cook</span>()      { cout &lt;&lt; <span class="string">"Cooking standard dish\n"</span>; deliver(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">deliver</span>()   { cout &lt;&lt; <span class="string">"Waiter delivers food\n"</span>; }
+    <span class="type">void</span>        <span class="function">closeDoors</span>(){ cout &lt;&lt; <span class="string">"Closing at 10 PM\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">FastFood</span> : <span class="keyword">public</span> <span class="type">Restaurant</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">openDoors</span>()  { cout &lt;&lt; <span class="string">"24/7 Open\n"</span>; serve(); }
+    <span class="type">void</span>        <span class="function">serve</span>()     { cout &lt;&lt; <span class="string">"Serving fast food menu\n"</span>; takeOrder(); }
+    <span class="type">void</span>        <span class="function">cook</span>()      { cout &lt;&lt; <span class="string">"Quick frying\n"</span>; deliver(); }
+    <span class="type">void</span>        <span class="function">deliver</span>()   { cout &lt;&lt; <span class="string">"Self-service counter\n"</span>; }
+};
+
+<span class="comment">// Test: Ce va afișa?</span>
+Restaurant* r = <span class="keyword">new</span> FastFood();
+r-&gt;openDoors();
+<span class="keyword">delete</span> r;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol1')">Vezi Răspunsul</button>
+                <div id="polysol1" class="output" style="display: none;">Output:
+Opening at 10 AM
+Serving fast food menu
+Taking order
+Quick frying
+Self-service counter
+
+Explicație: openDoors() nu e virtuală → versiunea din bază. serve() e virtuală → versiunea din FastFood.</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 2: 🎮 Game Combat System</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">Fighter</span> {
+<span class="keyword">public:</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">startCombat</span>() { cout &lt;&lt; <span class="string">"Fighter enters arena\n"</span>; prepareWeapon(); }
+    <span class="type">void</span>        <span class="function">prepareWeapon</span>() { cout &lt;&lt; <span class="string">"Draws sword\n"</span>; attack(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">attack</span>()       { cout &lt;&lt; <span class="string">"Basic sword slash\n"</span>; defend(); }
+    <span class="type">void</span>        <span class="function">defend</span>()       { cout &lt;&lt; <span class="string">"Raises shield\n"</span>; }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">victory</span>()      { cout &lt;&lt; <span class="string">"Fighter wins!\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">Ninja</span> : <span class="keyword">public</span> <span class="type">Fighter</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">startCombat</span>()  { cout &lt;&lt; <span class="string">"Ninja appears from shadows\n"</span>; prepareWeapon(); }
+    <span class="type">void</span>        <span class="function">prepareWeapon</span>() { cout &lt;&lt; <span class="string">"Throws shuriken\n"</span>; attack(); }
+    <span class="type">void</span>        <span class="function">attack</span>()       { cout &lt;&lt; <span class="string">"Silent strike\n"</span>; vanish(); }
+    <span class="type">void</span>        <span class="function">vanish</span>()       { cout &lt;&lt; <span class="string">"Disappears in smoke\n"</span>; victory(); }
+    <span class="type">void</span>        <span class="function">victory</span>()      { cout &lt;&lt; <span class="string">"Ninja vanishes victoriously!\n"</span>; }
+};
+
+<span class="comment">// Test: Predicționați output-ul</span>
+Fighter* f = <span class="keyword">new</span> Ninja();
+f-&gt;startCombat();
+<span class="keyword">delete</span> f;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol2')">Vezi Răspunsul</button>
+                <div id="polysol2" class="output" style="display: none;">Output:
+Ninja appears from shadows
+Draws sword
+Silent strike
+Raises shield
+
+Explicație: startCombat() e virtuală → Ninja. prepareWeapon() nu e virtuală → Fighter (care apelează attack() virtual → Ninja).</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 3: 🚗 Vehicle Manufacturing</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">CarFactory</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">startProduction</span>() { cout &lt;&lt; <span class="string">"Starting assembly line\n"</span>; buildChassis(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">buildChassis</span>()   { cout &lt;&lt; <span class="string">"Building standard chassis\n"</span>; installEngine(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">installEngine</span>()  { cout &lt;&lt; <span class="string">"Installing V6 engine\n"</span>; paint(); }
+    <span class="type">void</span>        <span class="function">paint</span>()          { cout &lt;&lt; <span class="string">"Painting in blue\n"</span>; addInterior(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">addInterior</span>()    { cout &lt;&lt; <span class="string">"Standard seats\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">ElectricCarFactory</span> : <span class="keyword">public</span> <span class="type">CarFactory</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">buildChassis</span>()   { cout &lt;&lt; <span class="string">"Building lightweight chassis\n"</span>; installEngine(); }
+    <span class="type">void</span>        <span class="function">installEngine</span>()  { cout &lt;&lt; <span class="string">"Installing electric motor\n"</span>; installBattery(); }
+    <span class="type">void</span>        <span class="function">installBattery</span>() { cout &lt;&lt; <span class="string">"Installing lithium battery\n"</span>; paint(); }
+    <span class="type">void</span>        <span class="function">addInterior</span>()    { cout &lt;&lt; <span class="string">"Eco-friendly interior\n"</span>; }
+};
+
+<span class="comment">// Ce se va afișa?</span>
+CarFactory* factory = <span class="keyword">new</span> ElectricCarFactory();
+factory-&gt;startProduction();
+<span class="keyword">delete</span> factory;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol3')">Vezi Răspunsul</button>
+                <div id="polysol3" class="output" style="display: none;">Output:
+Starting assembly line
+Building lightweight chassis
+Installing electric motor
+Installing lithium battery
+Painting in blue
+Eco-friendly interior
+
+Explicație: Lanț complex de apeluri virtuale și non-virtuale.</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 4: 📚 Online Course Platform</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">Course</span> {
+<span class="keyword">public:</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">start</span>()      { cout &lt;&lt; <span class="string">"Welcome to course\n"</span>; showIntro(); }
+    <span class="type">void</span>        <span class="function">showIntro</span>()  { cout &lt;&lt; <span class="string">"Course introduction\n"</span>; teach(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">teach</span>()      { cout &lt;&lt; <span class="string">"Teaching theory\n"</span>; practice(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">practice</span>()   { cout &lt;&lt; <span class="string">"Solving exercises\n"</span>; }
+    <span class="type">void</span>        <span class="function">evaluate</span>()   { cout &lt;&lt; <span class="string">"Final exam\n"</span>; certificate(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">certificate</span>(){ cout &lt;&lt; <span class="string">"Course completed!\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">InteractiveCourse</span> : <span class="keyword">public</span> <span class="type">Course</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">start</span>()      { cout &lt;&lt; <span class="string">"Interactive session begins\n"</span>; showIntro(); }
+    <span class="type">void</span>        <span class="function">teach</span>()      { cout &lt;&lt; <span class="string">"Live coding session\n"</span>; practice(); }
+    <span class="type">void</span>        <span class="function">practice</span>()   { cout &lt;&lt; <span class="string">"Pair programming\n"</span>; evaluate(); }
+    <span class="type">void</span>        <span class="function">certificate</span>(){ cout &lt;&lt; <span class="string">"Digital badge earned!\n"</span>; }
+};
+
+<span class="comment">// Analizați fluxul</span>
+Course* c = <span class="keyword">new</span> InteractiveCourse();
+c-&gt;start();
+<span class="keyword">delete</span> c;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol4')">Vezi Răspunsul</button>
+                <div id="polysol4" class="output" style="display: none;">Output:
+Interactive session begins
+Course introduction
+Live coding session
+Pair programming
+Final exam
+Digital badge earned!
+
+Explicație: Mix de funcții virtuale și non-virtuale cu apeluri înlănțuite.</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 5: 🎭 Theater Performance</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">Play</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">showtime</span>()    { cout &lt;&lt; <span class="string">"Curtains open\n"</span>; act1(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">act1</span>()        { cout &lt;&lt; <span class="string">"Romeo meets Juliet\n"</span>; intermission(); }
+    <span class="type">void</span>        <span class="function">intermission</span>(){ cout &lt;&lt; <span class="string">"15 minute break\n"</span>; act2(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">act2</span>()        { cout &lt;&lt; <span class="string">"Balcony scene\n"</span>; finale(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">finale</span>()      { cout &lt;&lt; <span class="string">"Tragic ending\n"</span>; applause(); }
+    <span class="type">void</span>        <span class="function">applause</span>()    { cout &lt;&lt; <span class="string">"Standing ovation\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">ModernPlay</span> : <span class="keyword">public</span> <span class="type">Play</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">act1</span>()        { cout &lt;&lt; <span class="string">"Texting instead of meeting\n"</span>; intermission(); }
+    <span class="type">void</span>        <span class="function">act2</span>()        { cout &lt;&lt; <span class="string">"Video call scene\n"</span>; finale(); }
+    <span class="type">void</span>        <span class="function">finale</span>()      { cout &lt;&lt; <span class="string">"Happy viral ending\n"</span>; }
+};
+
+<span class="comment">// Ce va afișa?</span>
+Play* p = <span class="keyword">new</span> ModernPlay();
+p-&gt;showtime();
+<span class="keyword">delete</span> p;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol5')">Vezi Răspunsul</button>
+                <div id="polysol5" class="output" style="display: none;">Output:
+Curtains open
+Texting instead of meeting
+15 minute break
+Video call scene
+Happy viral ending
+Standing ovation
+
+Explicație: Funcțiile virtuale sunt rezolvate dinamic, cele non-virtuale static.</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 6: 🏠 Smart Home System</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">HomeSystem</span> {
+<span class="keyword">public:</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">morning</span>()      { cout &lt;&lt; <span class="string">"6 AM wake up\n"</span>; lights(); }
+    <span class="type">void</span>        <span class="function">lights</span>()       { cout &lt;&lt; <span class="string">"Lights on\n"</span>; heating(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">heating</span>()      { cout &lt;&lt; <span class="string">"Temperature 20°C\n"</span>; }
+    <span class="type">void</span>        <span class="function">security</span>()     { cout &lt;&lt; <span class="string">"Alarm disabled\n"</span>; devices(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">devices</span>()      { cout &lt;&lt; <span class="string">"TV on news channel\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">SmartHome</span> : <span class="keyword">public</span> <span class="type">HomeSystem</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">morning</span>()      { cout &lt;&lt; <span class="string">"AI: Good morning!\n"</span>; lights(); coffee(); }
+    <span class="type">void</span>        <span class="function">heating</span>()      { cout &lt;&lt; <span class="string">"Smart thermostat 22°C\n"</span>; security(); }
+    <span class="type">void</span>        <span class="function">coffee</span>()       { cout &lt;&lt; <span class="string">"Coffee machine starts\n"</span>; }
+    <span class="type">void</span>        <span class="function">devices</span>()      { cout &lt;&lt; <span class="string">"Playing your playlist\n"</span>; }
+};
+
+<span class="comment">// Complex chain - predicționați!</span>
+HomeSystem* home = <span class="keyword">new</span> SmartHome();
+home-&gt;morning();
+<span class="keyword">delete</span> home;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol6')">Vezi Răspunsul</button>
+                <div id="polysol6" class="output" style="display: none;">Output:
+AI: Good morning!
+Lights on
+Smart thermostat 22°C
+Alarm disabled
+Playing your playlist
+Coffee machine starts
+
+Explicație: morning() virtual → SmartHome, care apelează lights() non-virtual din bază.</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 7: 🛍️ Shopping Experience</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">Shop</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">enter</span>()        { cout &lt;&lt; <span class="string">"Welcome!\n"</span>; browse(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">browse</span>()       { cout &lt;&lt; <span class="string">"Looking at products\n"</span>; select(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">select</span>()       { cout &lt;&lt; <span class="string">"Choosing item\n"</span>; pay(); }
+    <span class="type">void</span>        <span class="function">pay</span>()          { cout &lt;&lt; <span class="string">"Cash payment\n"</span>; wrap(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">wrap</span>()         { cout &lt;&lt; <span class="string">"Paper bag\n"</span>; }
+    <span class="type">void</span>        <span class="function">exit</span>()         { cout &lt;&lt; <span class="string">"Thank you!\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">OnlineShop</span> : <span class="keyword">public</span> <span class="type">Shop</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">enter</span>()        { cout &lt;&lt; <span class="string">"Loading website\n"</span>; browse(); }
+    <span class="type">void</span>        <span class="function">browse</span>()       { cout &lt;&lt; <span class="string">"Scrolling catalog\n"</span>; filter(); }
+    <span class="type">void</span>        <span class="function">filter</span>()       { cout &lt;&lt; <span class="string">"Applying filters\n"</span>; select(); }
+    <span class="type">void</span>        <span class="function">select</span>()       { cout &lt;&lt; <span class="string">"Add to cart\n"</span>; checkout(); }
+    <span class="type">void</span>        <span class="function">checkout</span>()     { cout &lt;&lt; <span class="string">"Proceed to checkout\n"</span>; pay(); }
+    <span class="type">void</span>        <span class="function">wrap</span>()         { cout &lt;&lt; <span class="string">"Email confirmation\n"</span>; exit(); }
+};
+
+<span class="comment">// Testați înțelegerea</span>
+Shop* s = <span class="keyword">new</span> OnlineShop();
+s-&gt;enter();
+<span class="keyword">delete</span> s;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol7')">Vezi Răspunsul</button>
+                <div id="polysol7" class="output" style="display: none;">Output:
+Welcome!
+Scrolling catalog
+Applying filters
+Add to cart
+Proceed to checkout
+Cash payment
+Email confirmation
+Thank you!
+
+Explicație: enter() non-virtual din bază, browse() virtual → OnlineShop.</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 8: 🎵 Music Player</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">MusicPlayer</span> {
+<span class="keyword">public:</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">powerOn</span>()      { cout &lt;&lt; <span class="string">"Device starting\n"</span>; loadMusic(); }
+    <span class="type">void</span>        <span class="function">loadMusic</span>()    { cout &lt;&lt; <span class="string">"Loading tracks\n"</span>; play(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">play</span>()         { cout &lt;&lt; <span class="string">"Playing music\n"</span>; showDisplay(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">showDisplay</span>()  { cout &lt;&lt; <span class="string">"LCD display\n"</span>; }
+    <span class="type">void</span>        <span class="function">stop</span>()         { cout &lt;&lt; <span class="string">"Music stopped\n"</span>; powerOff(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">powerOff</span>()     { cout &lt;&lt; <span class="string">"Goodbye\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">StreamingPlayer</span> : <span class="keyword">public</span> <span class="type">MusicPlayer</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">powerOn</span>()      { cout &lt;&lt; <span class="string">"Connecting WiFi\n"</span>; login(); }
+    <span class="type">void</span>        <span class="function">login</span>()        { cout &lt;&lt; <span class="string">"Spotify login\n"</span>; loadMusic(); }
+    <span class="type">void</span>        <span class="function">play</span>()         { cout &lt;&lt; <span class="string">"Streaming HD audio\n"</span>; showDisplay(); }
+    <span class="type">void</span>        <span class="function">showDisplay</span>()  { cout &lt;&lt; <span class="string">"Album art display\n"</span>; stop(); }
+    <span class="type">void</span>        <span class="function">powerOff</span>()     { cout &lt;&lt; <span class="string">"Saving playlist\n"</span>; }
+};
+
+<span class="comment">// Ce se întâmplă aici?</span>
+MusicPlayer* mp = <span class="keyword">new</span> StreamingPlayer();
+mp-&gt;powerOn();
+<span class="keyword">delete</span> mp;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol8')">Vezi Răspunsul</button>
+                <div id="polysol8" class="output" style="display: none;">Output:
+Connecting WiFi
+Spotify login
+Loading tracks
+Streaming HD audio
+Album art display
+Music stopped
+Saving playlist
+
+Explicație: powerOn() virtual → StreamingPlayer, dar loadMusic() non-virtual din bază.</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 9: 🏥 Medical System</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">Hospital</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">admission</span>()    { cout &lt;&lt; <span class="string">"Patient registered\n"</span>; triage(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">triage</span>()       { cout &lt;&lt; <span class="string">"Nurse assessment\n"</span>; diagnose(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">diagnose</span>()     { cout &lt;&lt; <span class="string">"Doctor examination\n"</span>; treat(); }
+    <span class="type">void</span>        <span class="function">treat</span>()        { cout &lt;&lt; <span class="string">"Standard treatment\n"</span>; discharge(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">discharge</span>()    { cout &lt;&lt; <span class="string">"Patient leaves\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">EmergencyRoom</span> : <span class="keyword">public</span> <span class="type">Hospital</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">admission</span>()    { cout &lt;&lt; <span class="string">"EMERGENCY!\n"</span>; triage(); }
+    <span class="type">void</span>        <span class="function">triage</span>()       { cout &lt;&lt; <span class="string">"Immediate assessment\n"</span>; stabilize(); }
+    <span class="type">void</span>        <span class="function">stabilize</span>()    { cout &lt;&lt; <span class="string">"Vitals stabilized\n"</span>; diagnose(); }
+    <span class="type">void</span>        <span class="function">diagnose</span>()     { cout &lt;&lt; <span class="string">"Quick diagnosis\n"</span>; urgentCare(); }
+    <span class="type">void</span>        <span class="function">urgentCare</span>()   { cout &lt;&lt; <span class="string">"Emergency procedure\n"</span>; treat(); }
+    <span class="type">void</span>        <span class="function">discharge</span>()    { cout &lt;&lt; <span class="string">"Transfer to ward\n"</span>; }
+};
+
+<span class="comment">// Analizați cu atenție</span>
+Hospital* h = <span class="keyword">new</span> EmergencyRoom();
+h-&gt;admission();
+<span class="keyword">delete</span> h;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol9')">Vezi Răspunsul</button>
+                <div id="polysol9" class="output" style="display: none;">Output:
+Patient registered
+Immediate assessment
+Vitals stabilized
+Quick diagnosis
+Emergency procedure
+Standard treatment
+Transfer to ward
+
+Explicație: admission() non-virtual → Hospital, triage() virtual → EmergencyRoom.</div>
+            </div>
+
+            <div class="exercise">
+                <h4>Exercițiul 10: 🎪 Circus Show</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiază</button>
+                    <pre><span class="keyword">class</span> <span class="type">CircusAct</span> {
+<span class="keyword">public:</span>
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">announce</span>()     { cout &lt;&lt; <span class="string">"Ladies and gentlemen!\n"</span>; prepare(); }
+    <span class="type">void</span>        <span class="function">prepare</span>()      { cout &lt;&lt; <span class="string">"Setting up stage\n"</span>; perform(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">perform</span>()      { cout &lt;&lt; <span class="string">"Basic juggling\n"</span>; climax(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">climax</span>()       { cout &lt;&lt; <span class="string">"Amazing trick!\n"</span>; bow(); }
+    <span class="type">void</span>        <span class="function">bow</span>()          { cout &lt;&lt; <span class="string">"Take a bow\n"</span>; applause(); }
+    <span class="keyword">virtual</span> <span class="type">void</span> <span class="function">applause</span>()     { cout &lt;&lt; <span class="string">"Crowd claps\n"</span>; }
+};
+
+<span class="keyword">class</span> <span class="type">MagicShow</span> : <span class="keyword">public</span> <span class="type">CircusAct</span> {
+<span class="keyword">public:</span>
+    <span class="type">void</span>        <span class="function">announce</span>()     { cout &lt;&lt; <span class="string">"Behold the magic!\n"</span>; mysterySounds(); }
+    <span class="type">void</span>        <span class="function">mysterySounds</span>(){ cout &lt;&lt; <span class="string">"Mysterious music\n"</span>; prepare(); }
+    <span class="type">void</span>        <span class="function">perform</span>()      { cout &lt;&lt; <span class="string">"Rabbit from hat\n"</span>; misdirect(); }
+    <span class="type">void</span>        <span class="function">misdirect</span>()    { cout &lt;&lt; <span class="string">"Look over there!\n"</span>; climax(); }
+    <span class="type">void</span>        <span class="function">climax</span>()       { cout &lt;&lt; <span class="string">"Person disappears!\n"</span>; reappear(); }
+    <span class="type">void</span>        <span class="function">reappear</span>()     { cout &lt;&lt; <span class="string">"Appears in audience!\n"</span>; bow(); }
+    <span class="type">void</span>        <span class="function">applause</span>()     { cout &lt;&lt; <span class="string">"Standing ovation!\n"</span>; }
+};
+
+<span class="comment">// Final challenge!</span>
+CircusAct* act = <span class="keyword">new</span> MagicShow();
+act-&gt;announce();
+<span class="keyword">delete</span> act;</pre>
+                </div>
+                <button onclick="toggleSolution('polysol10')">Vezi Răspunsul</button>
+                <div id="polysol10" class="output" style="display: none;">Output:
+Behold the magic!
+Mysterious music
+Setting up stage
+Rabbit from hat
+Look over there!
+Person disappears!
+Appears in audience!
+Take a bow
+Standing ovation!
+
+Explicație: Lanț complex cu multiple funcții virtuale și non-virtuale.</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>✏️ Exerciții Practice Avansate</h2>
 
             <div class="exercise">
                 <h4>Exercițiul 1: Sistem Bancar</h4>
@@ -1053,6 +1490,21 @@ void moveAllVehicles(vector<Vehicle*>& vehicles) {
             }, 2000);
         }
 
+        function runFairyTale() {
+            const output = document.getElementById('fairy-output');
+            output.style.display = 'block';
+            output.innerHTML = `<span style="color: #667eea;">FAIRY TALE</span>
+0 Început poveste originală
+
+<span style="color: #667eea;">UNHAPPY TALE</span>
+0 Început poveste originală
+
+<span style="color: #2ecc71;">Observație importantă:</span>
+Deși am creat un obiect unhappy_tale, act0() nu este virtuală!
+Prin urmare, se apelează versiunea din clasa de bază (fairy_tale).
+Dar act1() fiind virtuală, se va apela versiunea corectă din unhappy_tale când este invocată.`;
+        }
+
         function runRPGExample() {
             const output = document.getElementById('rpg-output');
             output.style.display = 'block';
@@ -1076,7 +1528,20 @@ Bilbo vanishes! Becomes invisible!
 
         function toggleSolution(id) {
             const sol = document.getElementById(id);
-            sol.style.display = sol.style.display === 'none' ? 'block' : 'none';
+            if (sol.style.display === 'none' || sol.style.display === '') {
+                sol.style.display = 'block';
+                // Animație de fade in
+                sol.style.opacity = '0';
+                setTimeout(() => {
+                    sol.style.transition = 'opacity 0.3s ease';
+                    sol.style.opacity = '1';
+                }, 10);
+            } else {
+                sol.style.opacity = '0';
+                setTimeout(() => {
+                    sol.style.display = 'none';
+                }, 300);
+            }
         }
 
         function checkExercise3() {
